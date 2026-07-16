@@ -42,6 +42,7 @@ float GetCPUTemp(IHardware hardware)
             && sensor.SensorType == SensorType.Temperature
             && sensor.Name.Contains("Max"))
         {
+            sensor.Hardware.Update();
             return (float)sensor.Value;
         }
     }
