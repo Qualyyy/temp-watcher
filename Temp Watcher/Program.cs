@@ -18,20 +18,16 @@ foreach (IHardware hardware in computer.Hardware)
     switch (hardware.HardwareType)
     {
         case HardwareType.Cpu:
-            float CPUTemp = GetCPUTemp(hardware);
-            Console.WriteLine($"CPU: {CPUTemp}°C");
-            stats.CPUTemperature = CPUTemp;
+            stats.CPUTemperature = GetCPUTemp(hardware);
             break;
 
         case HardwareType.GpuNvidia:
-            float GPUTemp = GetGPUTemp(hardware);
-            Console.WriteLine($"GPU: {GPUTemp}°C");
-            stats.GPUTemperature = GPUTemp;
+            stats.GPUTemperature = GetGPUTemp(hardware);
             break;
     }
-
-    Console.WriteLine();
 }
+
+Console.Write(stats.ToJson());
 
 float GetCPUTemp(IHardware hardware)
 {
@@ -39,13 +35,13 @@ float GetCPUTemp(IHardware hardware)
     {
         if (sensor.Value != null
             && sensor.SensorType == SensorType.Temperature
-            && sensor.Name.Contains("Average"))
+            && sensor.Name.Contains("Max"))
         {
             return (float)sensor.Value;
         }
     }
 
-    throw new Exception("CPU temp not found");
+    return -1;
 }
 
 float GetGPUTemp(IHardware hardware)
@@ -60,5 +56,5 @@ float GetGPUTemp(IHardware hardware)
         }
     }
 
-    throw new Exception("GPU temp not found");
+    return -1;
 }
