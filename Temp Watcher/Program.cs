@@ -9,25 +9,30 @@ Computer computer = new Computer
 
 computer.Open();
 
-PCStats stats = new PCStats();
-
-foreach (IHardware hardware in computer.Hardware)
+while (true)
 {
-    hardware.Update();
+    PCStats stats = new PCStats();
 
-    switch (hardware.HardwareType)
+    foreach (IHardware hardware in computer.Hardware)
     {
-        case HardwareType.Cpu:
-            stats.CPUTemperature = GetCPUTemp(hardware);
-            break;
+        hardware.Update();
 
-        case HardwareType.GpuNvidia:
-            stats.GPUTemperature = GetGPUTemp(hardware);
-            break;
+        switch (hardware.HardwareType)
+        {
+            case HardwareType.Cpu:
+                stats.CPUTemperature = GetCPUTemp(hardware);
+                break;
+
+            case HardwareType.GpuNvidia:
+                stats.GPUTemperature = GetGPUTemp(hardware);
+                break;
+        }
     }
-}
 
-Console.Write(stats.ToJson());
+    Console.WriteLine(stats.ToJson());
+
+    Thread.Sleep(1000);
+}
 
 float GetCPUTemp(IHardware hardware)
 {
