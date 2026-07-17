@@ -6,11 +6,5 @@ namespace Temp_Watcher.Core
     {
         public float CPUTemperature { get; set; }
         public float GPUTemperature { get; set; }
-
-
-        public string ToJson()
-        {
-            return JsonSerializer.Serialize(this);
-        }
     }
 }

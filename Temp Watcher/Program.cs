@@ -1,4 +1,5 @@
-﻿using Temp_Watcher.Core;
+﻿using System.Text.Json;
+using Temp_Watcher.Core;
 
 
 HardwareMonitor monitor = new HardwareMonitor();
@@ -7,7 +8,7 @@ while (true)
 {
     PCStats stats = monitor.GetStats();
 
-    Console.WriteLine(stats.ToJson());
+    Console.WriteLine(JsonSerializer.Serialize(stats));
 
     Thread.Sleep(1000);
 }
