@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 
-namespace Temp_Watcher
+namespace Temp_Watcher.Core
 {
-    internal class PCStats
+    public class PCStats
     {
         public float CPUTemperature { get; set; }
         public float GPUTemperature { get; set; }

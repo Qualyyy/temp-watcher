@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="Temp Watcher/Temp_Watcher.csproj" />
+  <Project Path="Temp_Watcher.Core/Temp_Watcher.Core.csproj" Id="c35be39a-787d-405d-b81d-6982bd497d45" />
 </Solution>

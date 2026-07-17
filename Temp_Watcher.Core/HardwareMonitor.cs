@@ -1,8 +1,8 @@
 ﻿using LibreHardwareMonitor.Hardware;
 
-namespace Temp_Watcher
+namespace Temp_Watcher.Core
 {
-    internal class HardwareMonitor
+    public class HardwareMonitor
     {
         private Computer computer;
         private List<IHardware> monitoredHardware;

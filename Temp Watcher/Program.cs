@@ -1,5 +1,4 @@
-﻿using LibreHardwareMonitor.Hardware;
-using Temp_Watcher;
+﻿using Temp_Watcher.Core;
 
 
 HardwareMonitor monitor = new HardwareMonitor();
@@ -10,5 +9,5 @@ while (true)
 
     Console.WriteLine(stats.ToJson());
 
-    Thread.Sleep(500);
+    Thread.Sleep(1000);
 }
