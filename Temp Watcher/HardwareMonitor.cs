@@ -40,27 +40,27 @@ namespace Temp_Watcher
             }
         }
 
-        public PCStats getStats()
+        public PCStats GetStats()
         {
             PCStats stats = new PCStats();
 
             UpdateHardware();
-            stats.CPUTemperature = (float)CpuTemperatureSensor.Value;
-            stats.GPUTemperature = (float)GpuTemperatureSensor.Value;
+            stats.CPUTemperature = CpuTemperatureSensor.Value ?? -1;
+            stats.GPUTemperature = GpuTemperatureSensor.Value ?? -1;
 
             return stats;
         }
 
-        private ISensor GetSensor(IHardware hardware, string selector)
+        private ISensor GetSensor(IHardware hardware, string nameContains)
         {
             foreach (ISensor sensor in hardware.Sensors)
             {
                 if (sensor.SensorType == SensorType.Temperature
-                    && sensor.Name.Contains(selector)
+                    && sensor.Name.Contains(nameContains)
                     )
                     return sensor;
             }
-            return null;
+            throw new Exception($"Sensor for {hardware.Name} not found.");
         }
 
         private void UpdateHardware()

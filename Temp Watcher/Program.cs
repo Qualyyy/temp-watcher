@@ -1,22 +1,14 @@
 ﻿using LibreHardwareMonitor.Hardware;
 using Temp_Watcher;
 
-Computer computer = new Computer
-{
-    IsCpuEnabled = true,
-    IsGpuEnabled = true
-};
 
-computer.Open();
+HardwareMonitor monitor = new HardwareMonitor();
 
 while (true)
 {
-
-    HardwareMonitor monitor = new HardwareMonitor();
-
-    PCStats stats = monitor.getStats();
+    PCStats stats = monitor.GetStats();
 
     Console.WriteLine(stats.ToJson());
 
-    Thread.Sleep(1000);
+    Thread.Sleep(500);
 }
