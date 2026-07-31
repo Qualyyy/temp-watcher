@@ -1,4 +1,5 @@
-﻿using System.Net.NetworkInformation;
+﻿using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Windows.Forms;
 
@@ -41,17 +42,15 @@ public class TrayApplicationContext : ApplicationContext
 
     private static string GetLocalIPAddress()
     {
-        foreach (var ni in NetworkInterface.GetAllNetworkInterfaces())
+        try
         {
-            if (ni.OperationalStatus != OperationalStatus.Up) continue;
-            if (ni.NetworkInterfaceType == NetworkInterfaceType.Loopback) continue;
-
-            foreach (var addr in ni.GetIPProperties().UnicastAddresses)
-            {
-                if (addr.Address.AddressFamily == AddressFamily.InterNetwork)
-                    return addr.Address.ToString();
-            }
+            using var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            socket.Connect("8.8.8.8", 65530); // no actual packet sent, just resolves routing
+            return ((IPEndPoint)socket.LocalEndPoint).Address.ToString();
         }
-        return "127.0.0.1";
+        catch
+        {
+            return "127.0.0.1";
+        }
     }
 }
