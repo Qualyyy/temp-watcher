@@ -1,4 +1,5 @@
-﻿using LibreHardwareMonitor.Hardware;
+﻿using BlackSharp.Core.Extensions;
+using LibreHardwareMonitor.Hardware;
 
 namespace Temp_Watcher.Core
 {
@@ -9,6 +10,25 @@ namespace Temp_Watcher.Core
 
         public ISensor? CpuTemperatureSensor { get; private set; }
         public ISensor? GpuTemperatureSensor { get; private set; }
+
+        private static readonly string[] CpuTemperatureSensors =
+        {
+            "Core Max",
+            "CCDs Max (Tdie)",
+            "CPU (Tctl/Tdie)",
+            "Core (Tctl/Tdie)",
+            "Core (Tdie)",
+            "Core (Tctl)",
+            "CPU Package",
+            "Core Average"
+        };
+
+        private static readonly string[] GpuTemperatureSensors =
+        {
+            "GPU Hot Spot",
+            "GPU Core",
+            "GPU Temperature"
+        };
 
         public HardwareMonitor()
         {
@@ -33,14 +53,14 @@ namespace Temp_Watcher.Core
                 {
                     case HardwareType.Cpu:
                         monitoredHardware.Add(hardware);
-                        CpuTemperatureSensor = GetTemperatureSensor(hardware, "Max");
+                        CpuTemperatureSensor = GetTemperatureSensor(hardware, CpuTemperatureSensors);
                         break;
 
                     case HardwareType.GpuNvidia:
                     case HardwareType.GpuAmd:
                     case HardwareType.GpuIntel:
                         monitoredHardware.Add(hardware);
-                        GpuTemperatureSensor = GetTemperatureSensor(hardware, "Core");
+                        GpuTemperatureSensor ??= GetTemperatureSensor(hardware, GpuTemperatureSensors);
                         break;
                 }
             }
@@ -59,14 +79,17 @@ namespace Temp_Watcher.Core
             return stats;
         }
 
-        private ISensor? GetTemperatureSensor(IHardware hardware, string nameContains)
+        private ISensor? GetTemperatureSensor(IHardware hardware, string[] nameContains)
         {
-            foreach (ISensor sensor in hardware.Sensors)
+            foreach (string s in nameContains)
             {
-                if (sensor.SensorType == SensorType.Temperature
-                    && sensor.Name.Contains(nameContains)
-                    )
-                    return sensor;
+                foreach (ISensor sensor in hardware.Sensors)
+                {
+                    if (sensor.SensorType == SensorType.Temperature
+                        && sensor.Name.Contains(s, StringComparison.OrdinalIgnoreCase))
+
+                        return sensor;
+                }
             }
 
             return null;
