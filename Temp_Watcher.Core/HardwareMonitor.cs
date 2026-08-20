@@ -1,13 +1,34 @@
-﻿using LibreHardwareMonitor.Hardware;
+﻿using BlackSharp.Core.Extensions;
+using LibreHardwareMonitor.Hardware;
 
 namespace Temp_Watcher.Core
 {
     public class HardwareMonitor
     {
-        private Computer computer;
-        private List<IHardware> monitoredHardware;
-        public ISensor CpuTemperatureSensor { get; private set; }
-        public ISensor GpuTemperatureSensor { get; private set; }
+        private readonly Computer computer;
+        private readonly List<IHardware> monitoredHardware;
+
+        public ISensor? CpuTemperatureSensor { get; private set; }
+        public ISensor? GpuTemperatureSensor { get; private set; }
+
+        private static readonly string[] CpuTemperatureSensors =
+        {
+            "Core Max",
+            "CCDs Max (Tdie)",
+            "CPU (Tctl/Tdie)",
+            "Core (Tctl/Tdie)",
+            "Core (Tdie)",
+            "Core (Tctl)",
+            "CPU Package",
+            "Core Average"
+        };
+
+        private static readonly string[] GpuTemperatureSensors =
+        {
+            "GPU Hot Spot",
+            "GPU Core",
+            "GPU Temperature"
+        };
 
         public HardwareMonitor()
         {
@@ -16,25 +37,30 @@ namespace Temp_Watcher.Core
                 IsCpuEnabled = true,
                 IsGpuEnabled = true
             };
+
             monitoredHardware = new List<IHardware>();
+
             Initialize();
         }
 
         private void Initialize()
         {
             computer.Open();
+
             foreach (IHardware hardware in computer.Hardware)
             {
                 switch (hardware.HardwareType)
                 {
                     case HardwareType.Cpu:
                         monitoredHardware.Add(hardware);
-                        CpuTemperatureSensor = GetSensor(hardware, "Max");
+                        CpuTemperatureSensor = GetTemperatureSensor(hardware, CpuTemperatureSensors);
                         break;
 
                     case HardwareType.GpuNvidia:
+                    case HardwareType.GpuAmd:
+                    case HardwareType.GpuIntel:
                         monitoredHardware.Add(hardware);
-                        GpuTemperatureSensor = GetSensor(hardware, "Core");
+                        GpuTemperatureSensor ??= GetTemperatureSensor(hardware, GpuTemperatureSensors);
                         break;
                 }
             }
@@ -42,25 +68,31 @@ namespace Temp_Watcher.Core
 
         public PCStats GetStats()
         {
-            PCStats stats = new PCStats();
-
             UpdateHardware();
-            stats.CPUTemperature = CpuTemperatureSensor.Value ?? -1;
-            stats.GPUTemperature = GpuTemperatureSensor.Value ?? -1;
+
+            PCStats stats = new PCStats
+            {
+                CPUTemperature = CpuTemperatureSensor?.Value ?? -1,
+                GPUTemperature = GpuTemperatureSensor?.Value ?? -1
+            };
 
             return stats;
         }
 
-        private ISensor GetSensor(IHardware hardware, string nameContains)
+        private ISensor? GetTemperatureSensor(IHardware hardware, string[] nameContains)
         {
-            foreach (ISensor sensor in hardware.Sensors)
+            foreach (string s in nameContains)
             {
-                if (sensor.SensorType == SensorType.Temperature
-                    && sensor.Name.Contains(nameContains)
-                    )
-                    return sensor;
+                foreach (ISensor sensor in hardware.Sensors)
+                {
+                    if (sensor.SensorType == SensorType.Temperature
+                        && sensor.Name.Contains(s, StringComparison.OrdinalIgnoreCase))
+
+                        return sensor;
+                }
             }
-            throw new Exception($"Sensor for {hardware.Name} not found.");
+
+            return null;
         }
 
         private void UpdateHardware()
