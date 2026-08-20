@@ -19,6 +19,7 @@ Application.SetCompatibleTextRenderingDefault(false);
 
 var trayContext = new TrayApplicationContext(
     () => app.StopAsync(),
-    port: 5208);
+    port: 5208
+);
 
 Application.Run(trayContext);
