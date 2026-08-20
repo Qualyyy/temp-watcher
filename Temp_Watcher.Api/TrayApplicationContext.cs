@@ -19,6 +19,8 @@ public class TrayApplicationContext : ApplicationContext
         var contextMenu = new ContextMenuStrip();
         contextMenu.Items.Add($"http://{ip}:{port}").Enabled = false;
         contextMenu.Items.Add(new ToolStripSeparator());
+        contextMenu.Items.Add("PawnIO required").Enabled = false;
+        contextMenu.Items.Add(new ToolStripSeparator());
         contextMenu.Items.Add("Exit", null, OnExitClicked);
 
         _trayIcon = new NotifyIcon
