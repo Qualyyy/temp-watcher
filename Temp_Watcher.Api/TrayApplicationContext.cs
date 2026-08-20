@@ -1,9 +1,7 @@
-﻿using System.Net;
-using System.Net.NetworkInformation;
+﻿using LibreHardwareMonitor.PawnIo;
+using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
-using System.Windows.Forms;
-
 namespace Temp_Watcher.Api;
 
 public class TrayApplicationContext : ApplicationContext
@@ -16,12 +14,21 @@ public class TrayApplicationContext : ApplicationContext
         _onExit = onExit;
 
         var ip = GetLocalIPAddress();
+        var address = $"http://{ip}:{port}";
 
         var contextMenu = new ContextMenuStrip();
-        contextMenu.Items.Add($"http://{ip}:{port}").Enabled = false;
+        contextMenu.Items.Add(address).Enabled = false;
+
         contextMenu.Items.Add(new ToolStripSeparator());
-        contextMenu.Items.Add("PawnIO required").Enabled = false;
+
+        contextMenu.Items.Add(
+            PawnIo.IsInstalled
+                ? $"PawnIO installed ({PawnIo.Version})"
+                : "PawnIO required"
+        ).Enabled = false;
+
         contextMenu.Items.Add(new ToolStripSeparator());
+
         contextMenu.Items.Add("Exit", null, OnExitClicked);
 
         _trayIcon = new NotifyIcon
@@ -35,8 +42,27 @@ public class TrayApplicationContext : ApplicationContext
             ContextMenuStrip = contextMenu
         };
 
-        _trayIcon.ShowBalloonTip(2000, "Temp Watcher API running",
-            $"Connect at http://{ip}:{port}", ToolTipIcon.Info);
+        _ = ShowStartupNotificationsAsync(ip, port);
+    }
+
+    private async Task ShowStartupNotificationsAsync(string ip, int port)
+    {
+        _trayIcon.ShowBalloonTip(
+            2000,
+            "Temp Watcher API running",
+            $"Connect at http://{ip}:{port}",
+            ToolTipIcon.Info);
+
+        if (!PawnIo.IsInstalled)
+        {
+            await Task.Delay(3000);
+
+            _trayIcon.ShowBalloonTip(
+                5000,
+                "PawnIO required",
+                "PawnIO is not installed. Some hardware sensors will not be available.",
+                ToolTipIcon.Warning);
+        }
     }
 
     private async void OnExitClicked(object? sender, EventArgs e)

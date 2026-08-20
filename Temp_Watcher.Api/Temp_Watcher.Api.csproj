@@ -8,6 +8,11 @@
 		<UseWindowsForms>true</UseWindowsForms>
 		<OutputType>WinExe</OutputType>
 
+		<Company>Qualy</Company>
+		<Authors>Qualy</Authors>
+		<AssemblyName>TempWatcher</AssemblyName>
+		<ApplicationIcon>Assets\tempwatcher.ico</ApplicationIcon>
+
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<SelfContained>true</SelfContained>
 		<PublishSingleFile>true</PublishSingleFile>
