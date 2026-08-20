@@ -1,5 +1,4 @@
 <Solution>
-  <Project Path="Temp Watcher/Temp_Watcher.Console.csproj" />
   <Project Path="Temp_Watcher.Api/Temp_Watcher.Api.csproj" Id="20e04ca7-32b4-44d8-bc78-ba93fdeea628" />
   <Project Path="Temp_Watcher.Core/Temp_Watcher.Core.csproj" Id="c35be39a-787d-405d-b81d-6982bd497d45" />
 </Solution>
