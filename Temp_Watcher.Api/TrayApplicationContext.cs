@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace Temp_Watcher.Api;
@@ -25,7 +26,10 @@ public class TrayApplicationContext : ApplicationContext
 
         _trayIcon = new NotifyIcon
         {
-            Icon = SystemIcons.Application,
+            Icon = new Icon(
+                Assembly.GetExecutingAssembly()
+                    .GetManifestResourceStream("Temp_Watcher.Api.Assets.tempwatcher.ico")!
+            ),
             Visible = true,
             Text = "Temp Watcher API",
             ContextMenuStrip = contextMenu

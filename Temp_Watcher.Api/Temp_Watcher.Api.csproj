@@ -16,6 +16,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Temp_Watcher.Core\Temp_Watcher.Core.csproj" />
+		<EmbeddedResource Include="Assets\tempwatcher.ico" />
 	</ItemGroup>
 
 </Project>
