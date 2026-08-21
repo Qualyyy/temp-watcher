@@ -25,3 +25,7 @@ Once running, Temp Watcher will be available from the Windows system tray.
 ## Companion App
 
 The [Wear OS companion app](https://github.com/Qualyyy/temp-watcher-wear-app) connects to Temp Watcher over your local network to display your PC's statistics.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
