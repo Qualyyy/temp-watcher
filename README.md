@@ -5,8 +5,8 @@ Temp Watcher is a Windows application that monitors your PC's system statistics 
 
 ## Features
 
-- CPU temperature and usage
-- GPU temperature and usage
+- CPU temperature
+- GPU temperature
 - Local network API
 - Runs in the Windows system tray
 - Designed to work with the companion Wear OS app
@@ -14,6 +14,7 @@ Temp Watcher is a Windows application that monitors your PC's system statistics 
 ## Requirements
 
 - Windows 10/11 (64-bit)
+- [pawnIO](https://pawnio.eu/) (required for some sensors)
 - No separate .NET installation required
 
 ## Installation
