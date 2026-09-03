@@ -40,14 +40,14 @@ static void ApplySavedSensorSettings(
 {
     SensorSettings? settings = settingsStore.Load();
 
-    if (settings != null)
-    {
-        if (settings.CpuSensorId != null)
-            monitor.SelectCpuSensor(settings.CpuSensorId);
+    if (settings == null)
+        return;
 
-        if (settings.GpuSensorId != null)
-            monitor.SelectGpuSensor(settings.GpuSensorId);
-    }
+    if (settings.CpuSensorId != null)
+        monitor.SelectCpuSensor(settings.CpuSensorId);
+
+    if (settings.GpuSensorId != null)
+        monitor.SelectGpuSensor(settings.GpuSensorId);
 }
 
 static void SelectSensorsIfNeeded(

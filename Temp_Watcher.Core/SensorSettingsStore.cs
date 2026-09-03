@@ -22,9 +22,16 @@ namespace Temp_Watcher.Core
             if (!File.Exists(settingsPath))
                 return null;
 
-            string json = File.ReadAllText(settingsPath);
+            try
+            {
+                string json = File.ReadAllText(settingsPath);
 
-            return JsonSerializer.Deserialize<SensorSettings>(json);
+                return JsonSerializer.Deserialize<SensorSettings>(json);
+            }
+            catch (JsonException)
+            {
+                return null;
+            }
         }
 
         public void Save(SensorSettings settings)
@@ -41,7 +48,10 @@ namespace Temp_Watcher.Core
                     WriteIndented = true
                 });
 
-            File.WriteAllText(settingsPath, json);
+            string tempPath = settingsPath + ".tmp";
+
+            File.WriteAllText(tempPath, json);
+            File.Move(tempPath, settingsPath, true);
         }
     }
 }
