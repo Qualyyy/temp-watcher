@@ -20,7 +20,7 @@ namespace Temp_Watcher.App
             if (monitor.CpuTemperatureSensors.Count == 0)
             {
                 cmbCpuSensor.Enabled = false;
-                lblCpu.Text = "CPU sensor (unavailable)";
+                lblCpu.Text = "CPU temperature sensor (unavailable)";
             }
 
             cmbGpuSensor.DataSource = monitor.GpuTemperatureSensors;
@@ -29,7 +29,7 @@ namespace Temp_Watcher.App
             if (monitor.GpuTemperatureSensors.Count == 0)
             {
                 cmbGpuSensor.Enabled = false;
-                lblGpu.Text = "GPU sensor (unavailable)";
+                lblGpu.Text = "GPU temperature sensor (unavailable)";
             }
 
             cmbCpuSensor.SelectedItem = monitor.CpuTemperatureSensor;
