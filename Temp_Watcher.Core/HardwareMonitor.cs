@@ -11,24 +11,9 @@ namespace Temp_Watcher.Core
         public ISensor? CpuTemperatureSensor { get; private set; }
         public ISensor? GpuTemperatureSensor { get; private set; }
 
-        private static readonly string[] CpuTemperatureSensors =
-        {
-            "Core Max",
-            "CCDs Max (Tdie)",
-            "CPU (Tctl/Tdie)",
-            "Core (Tctl/Tdie)",
-            "Core (Tdie)",
-            "Core (Tctl)",
-            "CPU Package",
-            "Core Average"
-        };
+        public List<ISensor> CpuTemperatureSensors { get; } = [];
+        public List<ISensor> GpuTemperatureSensors { get; } = [];
 
-        private static readonly string[] GpuTemperatureSensors =
-        {
-            "GPU Hot Spot",
-            "GPU Core",
-            "GPU Temperature"
-        };
 
         public HardwareMonitor()
         {
@@ -53,14 +38,14 @@ namespace Temp_Watcher.Core
                 {
                     case HardwareType.Cpu:
                         monitoredHardware.Add(hardware);
-                        CpuTemperatureSensor = GetTemperatureSensor(hardware, CpuTemperatureSensors);
+                        CpuTemperatureSensors.AddRange(GetTemperatureSensors(hardware));
                         break;
 
                     case HardwareType.GpuNvidia:
                     case HardwareType.GpuAmd:
                     case HardwareType.GpuIntel:
                         monitoredHardware.Add(hardware);
-                        GpuTemperatureSensor ??= GetTemperatureSensor(hardware, GpuTemperatureSensors);
+                        GpuTemperatureSensors.AddRange(GetTemperatureSensors(hardware));
                         break;
                 }
             }
@@ -79,20 +64,11 @@ namespace Temp_Watcher.Core
             return stats;
         }
 
-        private ISensor? GetTemperatureSensor(IHardware hardware, string[] nameContains)
+        private static List<ISensor> GetTemperatureSensors(IHardware hardware)
         {
-            foreach (string s in nameContains)
-            {
-                foreach (ISensor sensor in hardware.Sensors)
-                {
-                    if (sensor.SensorType == SensorType.Temperature
-                        && sensor.Name.Contains(s, StringComparison.OrdinalIgnoreCase))
-
-                        return sensor;
-                }
-            }
-
-            return null;
+            return hardware.Sensors
+                .Where(sensor => sensor.SensorType == SensorType.Temperature)
+                .ToList();
         }
 
         private void UpdateHardware()
