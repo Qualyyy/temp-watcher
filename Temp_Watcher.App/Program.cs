@@ -26,7 +26,7 @@ await app.StartAsync();
 
 var trayContext = new TrayApplicationContext(
     monitor: monitor,
-    settingsStore: settingsStore,
+    selectionService: selectionService,
     onExit: () => app.StopAsync(),
     port: 5208
 );

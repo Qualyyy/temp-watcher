@@ -9,14 +9,16 @@ public class TrayApplicationContext : ApplicationContext
 {
     private readonly NotifyIcon _trayIcon;
     private readonly Func<Task> _onExit;
+    private readonly SensorSelectionService SelectionService;
 
     public TrayApplicationContext(
         HardwareMonitor monitor,
-        SensorSettingsStore settingsStore,
+        SensorSelectionService selectionService,
         Func<Task> onExit,
         int port)
     {
         _onExit = onExit;
+        SelectionService = selectionService;
 
         var ip = GetLocalIPAddress();
         var address = $"http://{ip}:{port}";
@@ -29,7 +31,7 @@ public class TrayApplicationContext : ApplicationContext
         contextMenu.Items.Add(
             "Select temperature sensors...",
             null,
-            (_, _) => SelectTemperatureSensors(monitor, settingsStore)
+            (_, _) => SelectTemperatureSensors(monitor)
         );
 
         contextMenu.Items.Add(new ToolStripSeparator());
@@ -100,25 +102,15 @@ public class TrayApplicationContext : ApplicationContext
         return "127.0.0.1";
     }
 
-    private static void SelectTemperatureSensors(
-        HardwareMonitor monitor,
-        SensorSettingsStore settingsStore)
+    private void SelectTemperatureSensors(HardwareMonitor monitor)
     {
         using SensorSelectionForm form = new SensorSelectionForm(monitor);
 
         if (form.ShowDialog() != DialogResult.OK)
             return;
 
-        if (form.SelectedCpuSensor != null)
-            monitor.SelectCpuSensor(form.SelectedCpuSensor.Identifier.ToString());
-
-        if (form.SelectedGpuSensor != null)
-            monitor.SelectGpuSensor(form.SelectedGpuSensor.Identifier.ToString());
-
-        settingsStore.Save(new SensorSettings
-        {
-            CpuSensorId = form.SelectedCpuSensor?.Identifier.ToString(),
-            GpuSensorId = form.SelectedGpuSensor?.Identifier.ToString()
-        });
+        SelectionService.ApplyAndSave(
+            form.SelectedCpuSensor,
+            form.SelectedGpuSensor);
     }
 }
