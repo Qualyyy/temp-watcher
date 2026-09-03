@@ -47,6 +47,8 @@
             // 
             // cmbCpuSensor
             // 
+            cmbCpuSensor.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            cmbCpuSensor.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbCpuSensor.FormattingEnabled = true;
             cmbCpuSensor.Location = new Point(221, 89);
             cmbCpuSensor.Name = "cmbCpuSensor";
@@ -55,6 +57,8 @@
             // 
             // cmbGpuSensor
             // 
+            cmbGpuSensor.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            cmbGpuSensor.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbGpuSensor.FormattingEnabled = true;
             cmbGpuSensor.Location = new Point(221, 231);
             cmbGpuSensor.Name = "cmbGpuSensor";
@@ -92,8 +96,10 @@
             // 
             // SensorSelectionForm
             // 
+            AcceptButton = btnSave;
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            CancelButton = btnCancel;
             ClientSize = new Size(800, 450);
             Controls.Add(btnCancel);
             Controls.Add(btnSave);
@@ -101,8 +107,13 @@
             Controls.Add(lblGpu);
             Controls.Add(cmbCpuSensor);
             Controls.Add(lblCpu);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "SensorSelectionForm";
-            Text = "SensorSelectionForm";
+            ShowInTaskbar = false;
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Select temperature sensors";
             ResumeLayout(false);
             PerformLayout();
         }
