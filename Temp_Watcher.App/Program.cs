@@ -1,10 +1,13 @@
-using Temp_Watcher.Api;
 using Temp_Watcher.App;
 using Temp_Watcher.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.UseUrls("http://0.0.0.0:5208");
+
+Application.SetHighDpiMode(HighDpiMode.SystemAware);
+Application.EnableVisualStyles();
+Application.SetCompatibleTextRenderingDefault(false);
 
 HardwareMonitor monitor = new HardwareMonitor();
 
@@ -18,12 +21,10 @@ app.MapGet("/stats", () => monitor.GetStats());
 
 await app.StartAsync();
 
-Application.SetHighDpiMode(HighDpiMode.SystemAware);
-Application.EnableVisualStyles();
-Application.SetCompatibleTextRenderingDefault(false);
-
 var trayContext = new TrayApplicationContext(
-    () => app.StopAsync(),
+    monitor: monitor,
+    settingsStore: settingsStore,
+    onExit: () => app.StopAsync(),
     port: 5208
 );
 

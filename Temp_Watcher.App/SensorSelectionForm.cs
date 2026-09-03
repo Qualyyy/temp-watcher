@@ -1,11 +1,4 @@
 ﻿using LibreHardwareMonitor.Hardware;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using Temp_Watcher.Core;
 
 namespace Temp_Watcher.App
