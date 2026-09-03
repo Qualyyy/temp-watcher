@@ -35,7 +35,7 @@ public class TrayApplicationContext : ApplicationContext
         {
             Icon = new Icon(
                 Assembly.GetExecutingAssembly()
-                    .GetManifestResourceStream("Temp_Watcher.Api.Assets.tempwatcher.ico")!
+                    .GetManifestResourceStream("Temp_Watcher.App.Assets.tempwatcher.ico")!
             ),
             Visible = true,
             Text = "Temp Watcher API",
