@@ -32,8 +32,12 @@ namespace Temp_Watcher.App
                 lblGpu.Text = "GPU temperature sensor (unavailable)";
             }
 
-            cmbCpuSensor.SelectedItem = monitor.CpuTemperatureSensor;
-            cmbGpuSensor.SelectedItem = monitor.GpuTemperatureSensor;
+            cmbCpuSensor.SelectedItem =
+                monitor.CpuTemperatureSensor ??
+                monitor.CpuTemperatureSensors.FirstOrDefault();
+            cmbGpuSensor.SelectedItem =
+                monitor.GpuTemperatureSensor ??
+                monitor.GpuTemperatureSensors.FirstOrDefault();
         }
 
         private void btnSave_Click(object sender, EventArgs e)
