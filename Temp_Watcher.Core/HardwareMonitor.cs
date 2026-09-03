@@ -71,6 +71,30 @@ namespace Temp_Watcher.Core
                 .ToList();
         }
 
+        public bool SelectCpuSensor(string sensorId)
+        {
+            ISensor? sensor = CpuTemperatureSensors
+                .FirstOrDefault(sensor => sensor.Identifier.ToString() == sensorId);
+
+            if (sensor == null)
+                return false;
+
+            CpuTemperatureSensor = sensor;
+            return true;
+        }
+
+        public bool SelectGpuSensor(string sensorId)
+        {
+            ISensor? sensor = GpuTemperatureSensors
+                .FirstOrDefault(sensor => sensor.Identifier.ToString() == sensorId);
+
+            if (sensor == null)
+                return false;
+
+            GpuTemperatureSensor = sensor;
+            return true;
+        }
+
         private void UpdateHardware()
         {
             foreach (IHardware hardware in monitoredHardware)
