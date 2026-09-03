@@ -2,22 +2,37 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
-namespace Temp_Watcher.Api;
+using Temp_Watcher.Core;
+namespace Temp_Watcher.App;
 
 public class TrayApplicationContext : ApplicationContext
 {
     private readonly NotifyIcon _trayIcon;
     private readonly Func<Task> _onExit;
+    private readonly SensorSelectionService SelectionService;
 
-    public TrayApplicationContext(Func<Task> onExit, int port)
+    public TrayApplicationContext(
+        HardwareMonitor monitor,
+        SensorSelectionService selectionService,
+        Func<Task> onExit,
+        int port)
     {
         _onExit = onExit;
+        SelectionService = selectionService;
 
         var ip = GetLocalIPAddress();
         var address = $"http://{ip}:{port}";
 
         var contextMenu = new ContextMenuStrip();
         contextMenu.Items.Add(address).Enabled = false;
+
+        contextMenu.Items.Add(new ToolStripSeparator());
+
+        contextMenu.Items.Add(
+            "Select temperature sensors...",
+            null,
+            (_, _) => SelectTemperatureSensors(monitor)
+        );
 
         contextMenu.Items.Add(new ToolStripSeparator());
 
@@ -35,7 +50,7 @@ public class TrayApplicationContext : ApplicationContext
         {
             Icon = new Icon(
                 Assembly.GetExecutingAssembly()
-                    .GetManifestResourceStream("Temp_Watcher.Api.Assets.tempwatcher.ico")!
+                    .GetManifestResourceStream("Temp_Watcher.App.Assets.tempwatcher.ico")!
             ),
             Visible = true,
             Text = "Temp Watcher API",
@@ -78,11 +93,24 @@ public class TrayApplicationContext : ApplicationContext
         {
             using var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket.Connect("8.8.8.8", 65530); // no actual packet sent, just resolves routing
-            return ((IPEndPoint)socket.LocalEndPoint).Address.ToString();
+            if (socket.LocalEndPoint is IPEndPoint localEndPoint)
+                return localEndPoint.Address.ToString();
         }
         catch
         {
-            return "127.0.0.1";
         }
+        return "127.0.0.1";
+    }
+
+    private void SelectTemperatureSensors(HardwareMonitor monitor)
+    {
+        using SensorSelectionForm form = new SensorSelectionForm(monitor);
+
+        if (form.ShowDialog() != DialogResult.OK)
+            return;
+
+        SelectionService.ApplyAndSave(
+            form.SelectedCpuSensor,
+            form.SelectedGpuSensor);
     }
 }
