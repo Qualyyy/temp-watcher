@@ -91,12 +91,13 @@ public class TrayApplicationContext : ApplicationContext
         {
             using var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket.Connect("8.8.8.8", 65530); // no actual packet sent, just resolves routing
-            return ((IPEndPoint)socket.LocalEndPoint).Address.ToString();
+            if (socket.LocalEndPoint is IPEndPoint localEndPoint)
+                return localEndPoint.Address.ToString();
         }
         catch
         {
-            return "127.0.0.1";
         }
+        return "127.0.0.1";
     }
 
     private static void SelectTemperatureSensors(

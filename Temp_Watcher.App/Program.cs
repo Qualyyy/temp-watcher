@@ -12,8 +12,11 @@ Application.SetCompatibleTextRenderingDefault(false);
 HardwareMonitor monitor = new HardwareMonitor();
 
 SensorSettingsStore settingsStore = new SensorSettingsStore();
+SensorSelectionService selectionService =
+    new SensorSelectionService(monitor, settingsStore);
+
 ApplySavedSensorSettings(monitor, settingsStore);
-SelectSensorsIfNeeded(monitor, settingsStore);
+SelectSensorsIfNeeded(monitor, selectionService);
 
 var app = builder.Build();
 
@@ -49,7 +52,7 @@ static void ApplySavedSensorSettings(
 
 static void SelectSensorsIfNeeded(
     HardwareMonitor monitor,
-    SensorSettingsStore settingsStore)
+    SensorSelectionService selectionService)
 {
     bool cpuNeedsSelection =
         monitor.CpuTemperatureSensors.Count > 0 &&
@@ -66,16 +69,8 @@ static void SelectSensorsIfNeeded(
 
     if (form.ShowDialog() == DialogResult.OK)
     {
-        if (form.SelectedCpuSensor != null)
-            monitor.SelectCpuSensor(form.SelectedCpuSensor.Identifier.ToString());
-
-        if (form.SelectedGpuSensor != null)
-            monitor.SelectGpuSensor(form.SelectedGpuSensor.Identifier.ToString());
-
-        settingsStore.Save(new SensorSettings
-        {
-            CpuSensorId = form.SelectedCpuSensor?.Identifier.ToString(),
-            GpuSensorId = form.SelectedGpuSensor?.Identifier.ToString()
-        });
+        selectionService.ApplyAndSave(
+            form.SelectedCpuSensor,
+            form.SelectedGpuSensor);
     }
 }
