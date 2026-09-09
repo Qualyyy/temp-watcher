@@ -1,5 +1,5 @@
 # Temp Watcher
-*Personal project / actively developed.*
+*Personal project*
 
 Temp Watcher is a Windows application that monitors your PC's system statistics and makes them available over your local network.
 
