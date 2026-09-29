@@ -15,7 +15,7 @@ SensorSettingsStore settingsStore = new SensorSettingsStore();
 SensorSelectionService selectionService =
     new SensorSelectionService(monitor, settingsStore);
 
-ApplySavedSensorSettings(monitor, settingsStore);
+selectionService.Load();
 SelectSensorsIfNeeded(monitor, selectionService);
 
 var app = builder.Build();
@@ -70,7 +70,8 @@ static void SelectSensorsIfNeeded(
     if (form.ShowDialog() == DialogResult.OK)
     {
         selectionService.ApplyAndSave(
-            form.SelectedCpuSensor,
-            form.SelectedGpuSensor);
+            new SensorSelection(
+                form.SelectedCpuSensor?.Identifier.ToString(),
+                form.SelectedGpuSensor?.Identifier.ToString()));
     }
 }
