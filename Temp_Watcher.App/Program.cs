@@ -33,23 +33,6 @@ var trayContext = new TrayApplicationContext(
 
 Application.Run(trayContext);
 
-
-static void ApplySavedSensorSettings(
-    HardwareMonitor monitor,
-    SensorSettingsStore settingsStore)
-{
-    SensorSettings? settings = settingsStore.Load();
-
-    if (settings == null)
-        return;
-
-    if (settings.CpuSensorId != null)
-        monitor.SelectCpuSensor(settings.CpuSensorId);
-
-    if (settings.GpuSensorId != null)
-        monitor.SelectGpuSensor(settings.GpuSensorId);
-}
-
 static void SelectSensorsIfNeeded(
     HardwareMonitor monitor,
     SensorSelectionService selectionService)

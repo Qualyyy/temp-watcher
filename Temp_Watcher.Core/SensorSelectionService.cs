@@ -24,6 +24,12 @@ namespace Temp_Watcher.Core
         {
             Selection = selection;
 
+            if (selection.CpuSensorId != null)
+                monitor.SelectCpuSensor(selection.CpuSensorId);
+
+            if (selection.GpuSensorId != null)
+                monitor.SelectGpuSensor(selection.GpuSensorId);
+
             settingsStore.Save(new SensorSettings
             {
                 CpuSensorId = selection.CpuSensorId,
