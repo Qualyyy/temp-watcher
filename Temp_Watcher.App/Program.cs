@@ -39,16 +39,17 @@ static void SelectSensorsIfNeeded(
 {
     bool cpuNeedsSelection =
         monitor.CpuTemperatureSensors.Count > 0 &&
-        monitor.CpuTemperatureSensor == null;
+        selectionService.Selection.CpuSensorId == null;
 
     bool gpuNeedsSelection =
         monitor.GpuTemperatureSensors.Count > 0 &&
-        monitor.GpuTemperatureSensor == null;
+        selectionService.Selection.GpuSensorId == null;
 
     if (!cpuNeedsSelection && !gpuNeedsSelection)
         return;
 
-    using SensorSelectionForm form = new SensorSelectionForm(monitor);
+    using SensorSelectionForm form =
+        new SensorSelectionForm(monitor, selectionService.Selection);
 
     if (form.ShowDialog() == DialogResult.OK)
     {

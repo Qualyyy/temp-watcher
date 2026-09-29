@@ -104,7 +104,8 @@ public class TrayApplicationContext : ApplicationContext
 
     private void SelectTemperatureSensors(HardwareMonitor monitor)
     {
-        using SensorSelectionForm form = new SensorSelectionForm(monitor);
+        using SensorSelectionForm form =
+            new SensorSelectionForm(monitor, SelectionService.Selection);
 
         if (form.ShowDialog() != DialogResult.OK)
             return;

@@ -1,5 +1,4 @@
-﻿using LibreHardwareMonitor.Hardware;
-using Temp_Watcher.Core;
+﻿using Temp_Watcher.Core;
 
 namespace Temp_Watcher.App
 {
@@ -10,12 +9,14 @@ namespace Temp_Watcher.App
         public SensorInfo? SelectedGpuSensor { get; private set; }
 
 
-        public SensorSelectionForm(HardwareMonitor monitor)
+        public SensorSelectionForm(
+            HardwareMonitor monitor,
+            SensorSelection selection)
         {
             InitializeComponent();
 
             cmbCpuSensor.DataSource = monitor.CpuTemperatureSensors;
-            cmbCpuSensor.DisplayMember = nameof(ISensor.Name);
+            cmbCpuSensor.DisplayMember = nameof(SensorInfo.Name);
 
             if (monitor.CpuTemperatureSensors.Count == 0)
             {
@@ -24,7 +25,7 @@ namespace Temp_Watcher.App
             }
 
             cmbGpuSensor.DataSource = monitor.GpuTemperatureSensors;
-            cmbGpuSensor.DisplayMember = nameof(ISensor.Name);
+            cmbGpuSensor.DisplayMember = nameof(SensorInfo.Name);
 
             if (monitor.GpuTemperatureSensors.Count == 0)
             {
@@ -34,11 +35,11 @@ namespace Temp_Watcher.App
 
             cmbCpuSensor.SelectedItem =
                 monitor.CpuTemperatureSensors
-                    .FirstOrDefault(sensor => sensor.Id == monitor.CpuTemperatureSensor?.Identifier.ToString())
+                    .FirstOrDefault(sensor => sensor.Id == selection.CpuSensorId)
                 ?? monitor.CpuTemperatureSensors.FirstOrDefault();
             cmbGpuSensor.SelectedItem =
                 monitor.GpuTemperatureSensors
-                    .FirstOrDefault(sensor => sensor.Id == monitor.GpuTemperatureSensor?.Identifier.ToString())
+                    .FirstOrDefault(sensor => sensor.Id == selection.GpuSensorId)
                 ?? monitor.GpuTemperatureSensors.FirstOrDefault();
         }
 

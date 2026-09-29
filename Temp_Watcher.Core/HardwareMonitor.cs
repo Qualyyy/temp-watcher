@@ -11,8 +11,8 @@ namespace Temp_Watcher.Core
         private readonly List<ISensor> cpuTemperatureSensors = [];
         private readonly List<ISensor> gpuTemperatureSensors = [];
 
-        public ISensor? CpuTemperatureSensor { get; private set; }
-        public ISensor? GpuTemperatureSensor { get; private set; }
+        private ISensor? CpuTemperatureSensor { get; set; }
+        private ISensor? GpuTemperatureSensor { get; set; }
 
         public IReadOnlyList<SensorInfo> CpuTemperatureSensors { get; private set; } = [];
         public IReadOnlyList<SensorInfo> GpuTemperatureSensors { get; private set; } = [];
