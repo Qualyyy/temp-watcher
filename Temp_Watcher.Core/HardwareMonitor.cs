@@ -34,20 +34,25 @@ namespace Temp_Watcher.Core
 
             foreach (IHardware hardware in computer.Hardware)
             {
-                switch (hardware.HardwareType)
-                {
-                    case HardwareType.Cpu:
-                        monitoredHardware.Add(hardware);
-                        CpuTemperatureSensors.AddRange(GetTemperatureSensors(hardware));
-                        break;
+                AddHardware(hardware);
+            }
+        }
 
-                    case HardwareType.GpuNvidia:
-                    case HardwareType.GpuAmd:
-                    case HardwareType.GpuIntel:
-                        monitoredHardware.Add(hardware);
-                        GpuTemperatureSensors.AddRange(GetTemperatureSensors(hardware));
-                        break;
-                }
+        private void AddHardware(IHardware hardware)
+        {
+            switch (hardware.HardwareType)
+            {
+                case HardwareType.Cpu:
+                    monitoredHardware.Add(hardware);
+                    CpuTemperatureSensors.AddRange(GetTemperatureSensors(hardware));
+                    break;
+
+                case HardwareType.GpuNvidia:
+                case HardwareType.GpuAmd:
+                case HardwareType.GpuIntel:
+                    monitoredHardware.Add(hardware);
+                    GpuTemperatureSensors.AddRange(GetTemperatureSensors(hardware));
+                    break;
             }
         }
 
