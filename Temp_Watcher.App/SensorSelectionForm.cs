@@ -6,8 +6,8 @@ namespace Temp_Watcher.App
     public partial class SensorSelectionForm : Form
     {
 
-        public ISensor? SelectedCpuSensor { get; private set; }
-        public ISensor? SelectedGpuSensor { get; private set; }
+        public SensorInfo? SelectedCpuSensor { get; private set; }
+        public SensorInfo? SelectedGpuSensor { get; private set; }
 
 
         public SensorSelectionForm(HardwareMonitor monitor)
@@ -33,17 +33,19 @@ namespace Temp_Watcher.App
             }
 
             cmbCpuSensor.SelectedItem =
-                monitor.CpuTemperatureSensor ??
-                monitor.CpuTemperatureSensors.FirstOrDefault();
+                monitor.CpuTemperatureSensors
+                    .FirstOrDefault(sensor => sensor.Id == monitor.CpuTemperatureSensor?.Identifier.ToString())
+                ?? monitor.CpuTemperatureSensors.FirstOrDefault();
             cmbGpuSensor.SelectedItem =
-                monitor.GpuTemperatureSensor ??
-                monitor.GpuTemperatureSensors.FirstOrDefault();
+                monitor.GpuTemperatureSensors
+                    .FirstOrDefault(sensor => sensor.Id == monitor.GpuTemperatureSensor?.Identifier.ToString())
+                ?? monitor.GpuTemperatureSensors.FirstOrDefault();
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            SelectedCpuSensor = cmbCpuSensor.SelectedItem as ISensor;
-            SelectedGpuSensor = cmbGpuSensor.SelectedItem as ISensor;
+            SelectedCpuSensor = cmbCpuSensor.SelectedItem as SensorInfo;
+            SelectedGpuSensor = cmbGpuSensor.SelectedItem as SensorInfo;
 
             DialogResult = DialogResult.OK;
             Close();

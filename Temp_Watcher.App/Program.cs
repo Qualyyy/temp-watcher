@@ -54,7 +54,7 @@ static void SelectSensorsIfNeeded(
     {
         selectionService.ApplyAndSave(
             new SensorSelection(
-                form.SelectedCpuSensor?.Identifier.ToString(),
-                form.SelectedGpuSensor?.Identifier.ToString()));
+                form.SelectedCpuSensor?.Id,
+                form.SelectedGpuSensor?.Id));
     }
 }

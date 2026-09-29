@@ -8,11 +8,16 @@ namespace Temp_Watcher.Core
         private readonly Computer computer;
         private readonly List<IHardware> monitoredHardware;
 
+        private readonly List<ISensor> cpuTemperatureSensors = [];
+        private readonly List<ISensor> gpuTemperatureSensors = [];
+
         public ISensor? CpuTemperatureSensor { get; private set; }
         public ISensor? GpuTemperatureSensor { get; private set; }
 
-        public List<ISensor> CpuTemperatureSensors { get; } = [];
-        public List<ISensor> GpuTemperatureSensors { get; } = [];
+        public IReadOnlyList<SensorInfo> CpuTemperatureSensors { get; private set; } = [];
+        public IReadOnlyList<SensorInfo> GpuTemperatureSensors { get; private set; } = [];
+
+
 
 
         public HardwareMonitor()
@@ -36,6 +41,14 @@ namespace Temp_Watcher.Core
             {
                 AddHardware(hardware);
             }
+
+            CpuTemperatureSensors = cpuTemperatureSensors
+                .Select(ToSensorInfo)
+                .ToList();
+
+            GpuTemperatureSensors = gpuTemperatureSensors
+                .Select(ToSensorInfo)
+                .ToList();
         }
 
         private void AddHardware(IHardware hardware)
@@ -44,14 +57,14 @@ namespace Temp_Watcher.Core
             {
                 case HardwareType.Cpu:
                     monitoredHardware.Add(hardware);
-                    CpuTemperatureSensors.AddRange(GetTemperatureSensors(hardware));
+                    cpuTemperatureSensors.AddRange(GetTemperatureSensors(hardware));
                     break;
 
                 case HardwareType.GpuNvidia:
                 case HardwareType.GpuAmd:
                 case HardwareType.GpuIntel:
                     monitoredHardware.Add(hardware);
-                    GpuTemperatureSensors.AddRange(GetTemperatureSensors(hardware));
+                    gpuTemperatureSensors.AddRange(GetTemperatureSensors(hardware));
                     break;
             }
         }
@@ -76,9 +89,16 @@ namespace Temp_Watcher.Core
                 .ToList();
         }
 
+        private static SensorInfo ToSensorInfo(ISensor sensor)
+        {
+            return new SensorInfo(
+                sensor.Identifier.ToString(),
+                sensor.Name);
+        }
+
         public bool SelectCpuSensor(string sensorId)
         {
-            ISensor? sensor = CpuTemperatureSensors
+            ISensor? sensor = cpuTemperatureSensors
                 .FirstOrDefault(sensor => sensor.Identifier.ToString() == sensorId);
 
             if (sensor == null)
@@ -90,7 +110,7 @@ namespace Temp_Watcher.Core
 
         public bool SelectGpuSensor(string sensorId)
         {
-            ISensor? sensor = GpuTemperatureSensors
+            ISensor? sensor = gpuTemperatureSensors
                 .FirstOrDefault(sensor => sensor.Identifier.ToString() == sensorId);
 
             if (sensor == null)

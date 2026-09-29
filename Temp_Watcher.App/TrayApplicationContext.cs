@@ -111,7 +111,7 @@ public class TrayApplicationContext : ApplicationContext
 
         SelectionService.ApplyAndSave(
             new SensorSelection(
-                form.SelectedCpuSensor?.Identifier.ToString(),
-                form.SelectedGpuSensor?.Identifier.ToString()));
+                form.SelectedCpuSensor?.Id,
+                form.SelectedGpuSensor?.Id));
     }
 }
